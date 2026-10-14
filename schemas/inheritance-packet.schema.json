@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://morrow.dev/schemas/inheritance-packet.schema.json",
+  "title": "MORROW Inheritance Packet",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["morrow_version", "packet_id", "created_at", "decision", "reversibility", "authority"],
+  "properties": {
+    "morrow_version": { "type": "string", "const": "0.1" },
+    "packet_id": { "type": "string", "minLength": 1 },
+    "created_at": { "type": "string", "format": "date-time" },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["action"],
+      "properties": {
+        "action": { "type": "string", "minLength": 1 },
+        "summary": { "type": "string" },
+        "target": { "type": ["string", "null"] }
+      }
+    },
+    "reversibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["class"],
+      "properties": {
+        "class": {
+          "type": "string",
+          "enum": ["reversible", "costly", "time_limited", "irreversible", "unknown"]
+        },
+        "reversible_until": { "type": ["string", "null"], "format": "date-time" },
+        "recovery_path": { "type": ["string", "null"] }
+      }
+    },
+    "authority": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "scope": { "type": ["string", "null"] },
+        "delegated_by": { "type": ["string", "null"] }
+      }
+    },
+    "alternatives": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["action", "status"],
+        "properties": {
+          "action": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["available", "costly", "foreclosed", "unknown"]
+          },
+          "note": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "foreclosures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["possibility", "severity"],
+        "properties": {
+          "possibility": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["low", "medium", "high", "critical", "unknown"] },
+          "recoverable": { "type": ["boolean", "null"] },
+          "recovery_path": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "statement"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "statement": { "type": "string", "minLength": 1 },
+          "confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "reopen_if": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "inheritance_notes": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "evidence": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 }
+    }
+  }
+}
